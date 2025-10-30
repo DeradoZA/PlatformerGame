@@ -1,0 +1,34 @@
+.gameContainer {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto auto;
+    row-gap: 5px;
+    justify-content: center;
+}
+
+.gameContainer > div {
+    text-align: center;
+}
+
+.game-screen {
+    border: 6px black solid;
+    border-style:ridge;
+    width: 1000px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.game-track {
+    width: 150%;
+    height: 100%;
+}
+
+.button-style {
+    border: solid;
+    border-style: groove;
+    border-color: blue;
+}
+
+.hidden-div {
+    display: none;
+}

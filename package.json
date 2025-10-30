@@ -1,0 +1,18 @@
+{
+  "name": "le-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "runnerGame.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "timer-stopwatch": "^0.2.0"
+  }
+}
