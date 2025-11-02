@@ -20,7 +20,7 @@ const jumpingGameObjectStateMachineService = new GameStateMachineService();
 // Mutable Game Variables
 let gameFrame = 0;
 let verticalVelocity = 0;
-let cactusList : NpcObject[] = [];
+let npcObjectList : NpcObject[] = [];
 let playerObject : PlayerObject = createPlayerObject();
 let jumpingGameObject : JumpingGameObject = createNewJumpingGameObject();
 
@@ -78,6 +78,11 @@ function runnerGameLoop() {
             executeJump();
         }
 
+        if (elapsedGameTimeInSeconds % 20 === 0)
+        {
+            createWinningObject();
+        }
+
         updateGameObjects();
         drawGameFrame();
         computeCollisions();
@@ -88,12 +93,12 @@ function runnerGameLoop() {
 
 function computeCollisions() {
 
-    if (cactusList.length === 0)
+    if (npcObjectList.length === 0)
     {
         return;
     }
 
-    let closestObject = cactusList.reduce((prev, current) => {
+    let closestObject = npcObjectList.reduce((prev, current) => {
         return prev.xPos < current.xPos ? prev : current
     })
 
@@ -114,13 +119,24 @@ function computeCollisions() {
         if (Math.max(closestObjectBox.yBoundaries[0], playerBox.yBoundaries[0])
             <= Math.min(closestObjectBox.yBoundaries[1], playerBox.yBoundaries[1]))
         {
-            playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Collision);
-
-            jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.FailedGame);
-
-            performGameStateChangeActions(jumpingGameObject.state);
+            handleObjectCollision(closestObject);
         }
     }
+}
+
+function handleObjectCollision(closestObject: NpcObject) {
+    playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Collision);
+
+    if (closestObject.isWinningObject)
+    {
+        jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.FailedGame);
+    }
+    else
+    {
+        jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.CompletedGame);
+    }
+
+    performGameStateChangeActions(jumpingGameObject.state);
 }
 
 function generateObject() {
@@ -143,11 +159,12 @@ function createObject() {
     const object = document.createElement("img");
     object.src = "src/assets/cactus.png";
 
-    cactusList.push(
+    npcObjectList.push(
         {
             htmlElement: object,
             xPos: GAME_TRACK_WIDTH - 200,
-            yPos: GROUND_HEIGHT
+            yPos: GROUND_HEIGHT,
+            isWinningObject: false
         }
     )
 }
@@ -164,6 +181,20 @@ function createPlayerObject() : PlayerObject {
     }
 }
 
+function createWinningObject()  {
+    const object = document.createElement("img");
+    object.src = "src/assets/panda-bear.png";
+
+    const winningNpcObject = {
+        htmlElement: object,
+        xPos: GAME_TRACK_WIDTH - 200,
+        yPos: GROUND_HEIGHT,
+        isWinningObject: true
+    }
+
+    npcObjectList.push(winningNpcObject);
+}
+
 function createNewJumpingGameObject() : JumpingGameObject {
 
     return {
@@ -173,7 +204,7 @@ function createNewJumpingGameObject() : JumpingGameObject {
 }
 
 function updateGameObjects() {
-    cactusList.forEach(object => {
+    npcObjectList.forEach(object => {
         object.xPos -= 10;
     })
 }
@@ -183,9 +214,9 @@ function drawGameFrame() {
 
     gameTrackContext.drawImage(<CanvasImageSource>playerObject.htmlElement, playerObject.xPos, playerObject.yPos)
 
-    cactusList = cactusList.filter(cactus => cactus.xPos > 0);
+    npcObjectList = npcObjectList.filter(npcObject => npcObject.xPos > 0);
 
-    cactusList.forEach(object => {
+    npcObjectList.forEach(object => {
         gameTrackContext.drawImage(<CanvasImageSource>object.htmlElement, object.xPos, object.yPos)
     })
 }
@@ -198,7 +229,7 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
             // Show ending text;
             gameInformation.textContent = "RIP! You have been hit."
 
-            cactusList = [];
+            npcObjectList = [];
 
             // Update button states
             startButton.disabled = false;
@@ -214,7 +245,7 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
             // Show ending text;
             gameInformation.textContent = "Why end it all yourself?"
 
-            cactusList = [];
+            npcObjectList = [];
 
             // Update button states
             startButton.disabled = false;
