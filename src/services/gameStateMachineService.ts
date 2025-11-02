@@ -7,7 +7,7 @@ export class GameStateMachineService implements StateMachineService<GameStateEnu
         [GameStateEnum.BeginningScreen, [GameStateEnum.InGame]],
         [GameStateEnum.FailedGame, [GameStateEnum.BeginningScreen]],
         [GameStateEnum.GameEndedByPlayer, [GameStateEnum.BeginningScreen]],
-        [GameStateEnum.InGame, [GameStateEnum.FailedGame, GameStateEnum.GameEndedByPlayer]],
+        [GameStateEnum.InGame, [GameStateEnum.FailedGame, GameStateEnum.GameEndedByPlayer, GameStateEnum.CompletedGame]],
         [GameStateEnum.CompletedGame, []]
     ])
 

@@ -6,7 +6,9 @@ export interface PlayerObject extends GameObject, ObjectWithState<PlayerStateEnu
     yPos: number
 }
 
-export interface NpcObject extends GameObject {}
+export interface NpcObject extends GameObject {
+    isWinningObject: boolean;
+}
 
 export interface ObjectBox {
     xBoundaries: number[],

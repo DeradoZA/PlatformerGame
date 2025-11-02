@@ -29,12 +29,6 @@ gameInformation.textContent = "Welcome to the game! Press F to jump!";
 endButton.disabled = true;
 videoContainer.classList.add('hidden-div');
 
-toggleContentButton?.addEventListener('click', () => {
-    videoContainer.classList.remove('hidden-div');
-
-    gameContainer.classList.add('hidden-div');
-})
-
 startButton?.addEventListener('click', () => {
     jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.InGame);
 
@@ -129,11 +123,11 @@ function handleObjectCollision(closestObject: NpcObject) {
 
     if (closestObject.isWinningObject)
     {
-        jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.FailedGame);
+        jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.CompletedGame);
     }
     else
     {
-        jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.CompletedGame);
+        jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.FailedGame);
     }
 
     performGameStateChangeActions(jumpingGameObject.state);
