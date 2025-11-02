@@ -1,9 +1,12 @@
-export interface GameObject {
+import type { GameObject, ObjectWithState } from "./baseModels.js"
+
+export interface PlayerObject extends GameObject, ObjectWithState<PlayerStateEnum> {
     htmlElement: HTMLElement,
     xPos: number,
     yPos: number
-    playerState?: PlayerStateEnum
 }
+
+export interface NpcObject extends GameObject {}
 
 export interface ObjectBox {
     xBoundaries: number[],
@@ -22,4 +25,8 @@ export enum GameStateEnum {
     FailedGame,
     GameEndedByPlayer,
     CompletedGame
+}
+
+export interface JumpingGameObject extends ObjectWithState<GameStateEnum> {
+    gameDuration: number;
 }

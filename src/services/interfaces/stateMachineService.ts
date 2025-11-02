@@ -1,4 +1,6 @@
-export interface StateMachineService<TStateEnum, TObjectWithState> {
+import type { ObjectWithState } from "../../models/baseModels";
+
+export interface StateMachineService<TStateEnum, TObjectWithState extends ObjectWithState<TStateEnum>> {
     allowableStateChanges: Map<TStateEnum, TStateEnum[]>;
 
     validateStateTransition(currentObjectState: TStateEnum, desiredState: TStateEnum) : boolean;

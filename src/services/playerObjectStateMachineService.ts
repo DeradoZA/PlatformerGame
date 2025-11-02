@@ -1,7 +1,7 @@
-import {PlayerStateEnum, type GameObject} from '../models/gameModels.js'
+import {PlayerStateEnum, type PlayerObject} from '../models/gameModels.js'
 import type { StateMachineService } from './interfaces/stateMachineService.js';
 
-export class PlayerObjectStateMachineService implements StateMachineService<PlayerStateEnum, GameObject>
+export class PlayerObjectStateMachineService implements StateMachineService<PlayerStateEnum, PlayerObject>
 {
     allowableStateChanges: Map<PlayerStateEnum, PlayerStateEnum[]> = new Map([
         [PlayerStateEnum.Idle, [PlayerStateEnum.Collision, PlayerStateEnum.Jumping]],
@@ -14,13 +14,13 @@ export class PlayerObjectStateMachineService implements StateMachineService<Play
 
         return availableStateChanges.includes(desiredState);
     }
-    
-    tryPerformStateChange(objectWithState: GameObject, desiredState: PlayerStateEnum): boolean {
-        const isStateTransitionAllowed = this.validateStateTransition(objectWithState.playerState, desiredState);
+
+    tryPerformStateChange(objectWithState: PlayerObject, desiredState: PlayerStateEnum): boolean {
+        const isStateTransitionAllowed = this.validateStateTransition(objectWithState.state, desiredState);
 
         if (isStateTransitionAllowed)
         {
-            objectWithState.playerState = desiredState;
+            objectWithState.state = desiredState;
             return true;
         }
 

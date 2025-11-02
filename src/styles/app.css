@@ -1,3 +1,9 @@
+.body {
+    background-image: linear-gradient(to right, #87CEEB, #ffffff); /* Example: red-orange to light orange */
+    min-height: 100vh; /* Ensures the gradient covers the full viewport height */
+    margin: 0; /* Removes default body margin */
+}
+
 .gameContainer {
     display: grid;
     grid-template-columns: auto;
@@ -31,4 +37,11 @@
 
 .hidden-div {
     display: none;
+}
+
+.video-container-div {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 100vh;
 }

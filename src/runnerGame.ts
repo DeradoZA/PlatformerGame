@@ -1,6 +1,9 @@
-import { PlayerStateEnum, type GameObject, type ObjectBox } from './models/gameModels.js';
+import { GAME_TRACK_HEIGHT, GAME_TRACK_WIDTH, GROUND_HEIGHT, secondsPerFrame, TIME_TO_APEX, verticalAcceleration } from './constants/gameConstants.js';
+import { GameStateEnum, PlayerStateEnum, type JumpingGameObject, type NpcObject, type ObjectBox, type PlayerObject } from './models/gameModels.js';
+import { GameStateMachineService } from './services/gameStateMachineService.js';
 import { PlayerObjectStateMachineService } from './services/playerObjectStateMachineService.js';
 
+// HTML Elements
 const gameContainer = <HTMLDivElement>document.getElementById("gameContainer");
 const videoContainer = <HTMLDivElement>document.getElementById("videoContainer");
 const startButton = <HTMLButtonElement>document.getElementById("startBtn");
@@ -9,28 +12,21 @@ const toggleContentButton = <HTMLButtonElement>document.getElementById("contentT
 const gameTrack = <HTMLCanvasElement>document.getElementById("gameTrack");
 const gameInformation = <HTMLElement>document.getElementById("gameInformation");
 
-gameInformation.textContent = "Welcome to the game! Press F to jump!";
-
-const GAME_TRACK_WIDTH = 1200;
-const GAME_TRACK_HEIGHT = 200;
-const GROUND_HEIGHT = 125;
-const TIME_TO_APEX = 0.40;
-const secondsPerFrame = 1/60;
-const verticalAcceleration = 2 * (GROUND_HEIGHT + 170) / TIME_TO_APEX^2;
+// Game Constants
 const gameTrackContext = gameTrack!.getContext("2d")
-
 const playerObjectStateMachineService = new PlayerObjectStateMachineService();
+const jumpingGameObjectStateMachineService = new GameStateMachineService();
 
-let shouldEndGame = false;
+// Mutable Game Variables
 let gameFrame = 0;
-
 let verticalVelocity = 0;
+let cactusList : NpcObject[] = [];
+let playerObject : PlayerObject = createPlayerObject();
+let jumpingGameObject : JumpingGameObject = createNewJumpingGameObject();
 
-let cactusList : GameObject[] = [];
-let playerObject : GameObject = createPlayerObject();
-
+// Initial Game Setup
+gameInformation.textContent = "Welcome to the game! Press F to jump!";
 endButton.disabled = true;
-
 videoContainer.classList.add('hidden-div');
 
 toggleContentButton?.addEventListener('click', () => {
@@ -40,23 +36,15 @@ toggleContentButton?.addEventListener('click', () => {
 })
 
 startButton?.addEventListener('click', () => {
-    if (shouldEndGame)
-    {
-        shouldEndGame = false;
-    }
+    jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.InGame);
 
-    gameFrame = 0;
-
-    startButton.disabled = true;
-    endButton.disabled = false;
-
-    gameInformation.textContent = "";
-
-    window.requestAnimationFrame(runnerGameLoop);
+    performGameStateChangeActions(jumpingGameObject.state);
 })
 
 endButton?.addEventListener('click', () => {
-    shouldEndGame = true;
+    jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.GameEndedByPlayer);
+
+    performGameStateChangeActions(jumpingGameObject.state);
 })
 
 document.addEventListener('keydown', (event) => {
@@ -73,32 +61,28 @@ document.addEventListener('keydown', (event) => {
 });
 
 function runnerGameLoop() {
-    gameFrame++;
-
-    // Game frame rate is 60fps
-    let elapsedGameTimeInSeconds = gameFrame / 60;
-
-    if (elapsedGameTimeInSeconds % 3 === 0)
+    if (jumpingGameObject.state === GameStateEnum.InGame)
     {
-        generateObject();
-    }
+        gameFrame++;
 
-    if (playerObject.playerState === PlayerStateEnum.Jumping)
-    {
-        executeJump();
-    }
+        // Game frame rate is 60fps
+        let elapsedGameTimeInSeconds = gameFrame / 60;
 
-    updateGameObjects();
-    drawGameFrame();
-    computeCollisions();
+        if (elapsedGameTimeInSeconds % 3 === 0)
+        {
+            generateObject();
+        }
 
-    if (!shouldEndGame && !(playerObject.playerState === PlayerStateEnum.Collision))
-    {
+        if (playerObject.state === PlayerStateEnum.Jumping)
+        {
+            executeJump();
+        }
+
+        updateGameObjects();
+        drawGameFrame();
+        computeCollisions();
+
         window.requestAnimationFrame(runnerGameLoop);
-    }
-    else
-    {
-        tearDownGame();
     }
 }
 
@@ -131,6 +115,10 @@ function computeCollisions() {
             <= Math.min(closestObjectBox.yBoundaries[1], playerBox.yBoundaries[1]))
         {
             playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Collision);
+
+            jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.FailedGame);
+
+            performGameStateChangeActions(jumpingGameObject.state);
         }
     }
 }
@@ -164,7 +152,7 @@ function createObject() {
     )
 }
 
-function createPlayerObject() : GameObject {
+function createPlayerObject() : PlayerObject {
     const object = document.createElement("img");
     object.src = "src/assets/dino.png";
 
@@ -172,7 +160,15 @@ function createPlayerObject() : GameObject {
         htmlElement: object,
         xPos: 100,
         yPos: GROUND_HEIGHT,
-        playerState: PlayerStateEnum.Idle
+        state: PlayerStateEnum.Idle
+    }
+}
+
+function createNewJumpingGameObject() : JumpingGameObject {
+
+    return {
+        gameDuration: 0,
+        state: GameStateEnum.BeginningScreen
     }
 }
 
@@ -194,18 +190,67 @@ function drawGameFrame() {
     })
 }
 
-function tearDownGame() {
-    // Clear game objects
-    gameTrackContext.clearRect(0, 0, GAME_TRACK_WIDTH, GAME_TRACK_HEIGHT);
-    cactusList = [];
+function performGameStateChangeActions(newGameState: GameStateEnum) {
+    switch (newGameState)
+    {
+        case GameStateEnum.FailedGame:
+        {
+            // Show ending text;
+            gameInformation.textContent = "RIP! You have been hit."
 
-    // Update button states
-    startButton.disabled = false;
-    endButton.disabled = true;
+            cactusList = [];
 
-    // Reset game frames
-    gameFrame = 0;
+            // Update button states
+            startButton.disabled = false;
+            endButton.disabled = true;
 
-    // Show ending text;
-    gameInformation.textContent = "RIP! You have been hit."
+            // Reset game frame counter
+            gameFrame = 0;
+
+            break;
+        }
+        case GameStateEnum.GameEndedByPlayer:
+        {
+            // Show ending text;
+            gameInformation.textContent = "Why end it all yourself?"
+
+            cactusList = [];
+
+            // Update button states
+            startButton.disabled = false;
+            endButton.disabled = true;
+
+            // Reset game frame counter
+            gameFrame = 0;
+
+            break;
+        }
+        case GameStateEnum.InGame:
+        {
+            jumpingGameObject.gameDuration = 0;
+
+            gameFrame = 0;
+
+            startButton.disabled = true;
+            endButton.disabled = false;
+
+            gameInformation.textContent = "";
+
+            window.requestAnimationFrame(runnerGameLoop);
+
+            break;
+        }
+        case GameStateEnum.CompletedGame: {
+            // Show next screen
+            videoContainer.classList.remove('hidden-div');
+
+            gameContainer.classList.add('hidden-div');
+
+            break;
+        }
+        default: {
+            // Do nothing
+            break;
+        }
+    }
 }
