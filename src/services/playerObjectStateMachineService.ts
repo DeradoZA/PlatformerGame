@@ -6,7 +6,7 @@ export class PlayerObjectStateMachineService implements StateMachineService<Play
     allowableStateChanges: Map<PlayerStateEnum, PlayerStateEnum[]> = new Map([
         [PlayerStateEnum.Idle, [PlayerStateEnum.Collision, PlayerStateEnum.Jumping]],
         [PlayerStateEnum.Jumping, [PlayerStateEnum.Collision, PlayerStateEnum.Idle]],
-        [PlayerStateEnum.Collision, []]
+        [PlayerStateEnum.Collision, [PlayerStateEnum.Idle]]
     ]);
 
     validateStateTransition(currentObjectState: PlayerStateEnum, desiredState: PlayerStateEnum): boolean {

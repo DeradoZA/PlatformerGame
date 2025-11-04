@@ -32,6 +32,8 @@ videoContainer.classList.add('hidden-div');
 startButton?.addEventListener('click', () => {
     jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.InGame);
 
+    playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Idle);
+
     performGameStateChangeActions(jumpingGameObject.state);
 })
 
@@ -216,6 +218,7 @@ function drawGameFrame() {
 }
 
 function performGameStateChangeActions(newGameState: GameStateEnum) {
+    console.log("Hi")
     switch (newGameState)
     {
         case GameStateEnum.FailedGame:
