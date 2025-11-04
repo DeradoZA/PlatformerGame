@@ -23,7 +23,7 @@ jobs:
         - name: Build Node Project
           run: npm run build
         - name: Delete gitignore
-          run: find ./out -name ".gitignore" -delete
+          run: find ./ -name ".gitignore" -delete
         - name: Copy to gh-pages
           uses: peaceiris/actions-gh-pages@v3
           with:
