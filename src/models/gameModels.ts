@@ -1,7 +1,6 @@
 import type { GameObject, ObjectWithState } from "./baseModels.js"
 
 export interface PlayerObject extends GameObject, ObjectWithState<PlayerStateEnum> {
-    htmlElement: HTMLElement,
     xPos: number,
     yPos: number
 }

@@ -3,7 +3,7 @@ export interface ObjectWithState<TStateEnum> {
 }
 
 export interface GameObject {
-    htmlElement: HTMLElement,
+    htmlElement: HTMLImageElement,
     xPos: number,
     yPos: number
 }

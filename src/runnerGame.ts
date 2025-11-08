@@ -56,6 +56,7 @@ document.addEventListener('keydown', (event) => {
 
         if (didStateChange)
         {
+            playerObject.htmlElement.src = "src/assets/jumping_man.png";
             verticalVelocity = -(verticalAcceleration) * TIME_TO_APEX;
         }
     }
@@ -153,6 +154,7 @@ function executeJump() {
     {
         playerObject.yPos = GROUND_HEIGHT;
         playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Idle)
+        playerObject.htmlElement.src = "src/assets/running_man.png";
     }
 }
 
@@ -172,7 +174,7 @@ function createObject() {
 
 function createPlayerObject() : PlayerObject {
     const object = document.createElement("img");
-    object.src = "src/assets/dino.png";
+    object.src = "src/assets/running_man.png";
 
     return {
         htmlElement: object,
