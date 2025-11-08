@@ -24,7 +24,7 @@ body, button, h1 {
 }
 
 .game-screen {
-    border: 6px black solid;
+    border: 6px #8C6F5A solid;
     border-radius: 15px;
     width: 1000px;
     height: 350px;
@@ -39,7 +39,9 @@ body, button, h1 {
 .button-style {
     border: solid;
     border-style: groove;
-    border-color: blue;
+    border-color: #8C6F5A;
+    background-color: #8C6F5A;
+    border-radius: 15px;
 }
 
 .hidden-div {
