@@ -25,7 +25,12 @@ let playerObject : PlayerObject = createPlayerObject();
 let jumpingGameObject : JumpingGameObject = createNewJumpingGameObject();
 
 // Initial Game Setup
-gameInformation.textContent = "Welcome to the game! Press F to jump!";
+gameInformation.textContent = 
+`
+Heyyyy Cuki! I've set up a small, cute challenge ahead of you ❤️
+\n Just press f to jump and play until you find me
+\n I shall be seeing you momentarily, okay love youuuuuuu
+`;
 endButton.disabled = true;
 videoContainer.classList.add('hidden-div');
 
@@ -208,6 +213,16 @@ function updateGameObjects() {
 function drawGameFrame() {
     gameTrackContext.clearRect(0, 0, GAME_TRACK_WIDTH, GAME_TRACK_HEIGHT);
 
+    gameTrackContext.beginPath();
+
+    gameTrackContext.moveTo(0, GROUND_HEIGHT + 45);
+
+    gameTrackContext.lineTo(GAME_TRACK_WIDTH, GROUND_HEIGHT + 45);
+
+    gameTrackContext.lineWidth = 2;
+
+    gameTrackContext.stroke();
+
     gameTrackContext.drawImage(<CanvasImageSource>playerObject.htmlElement, playerObject.xPos, playerObject.yPos)
 
     npcObjectList = npcObjectList.filter(npcObject => npcObject.xPos > 0);
@@ -218,13 +233,12 @@ function drawGameFrame() {
 }
 
 function performGameStateChangeActions(newGameState: GameStateEnum) {
-    console.log("Hi")
     switch (newGameState)
     {
         case GameStateEnum.FailedGame:
         {
             // Show ending text;
-            gameInformation.textContent = "RIP! You have been hit."
+            gameInformation.textContent = "Oof! I implore you to give it another ago, you gots this"
 
             npcObjectList = [];
 
@@ -240,7 +254,7 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
         case GameStateEnum.GameEndedByPlayer:
         {
             // Show ending text;
-            gameInformation.textContent = "Why end it all yourself?"
+            gameInformation.textContent = "You ended verreh verreh early 👀 You gotta play until you find me"
 
             npcObjectList = [];
 

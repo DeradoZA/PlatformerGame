@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="src/styles/app.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <title>Dino Game</title>
 </head>
 <body class="body">
     <div class="gameContainer" id="gameContainer">
-        <div>
-            <h1 id="gameInformation"></h1>
-        </div>
         <div id="gameScreen" class="game-screen">
-            <canvas id="gameTrack" class="game-track" width=1500 height=200></canvas>
+            <div>
+                <h1 id="gameInformation" ></h1>
+            </div>
+            <canvas id="gameTrack" class="game-track" width=1500 height=350></canvas>
         </div>
         <div>
             <button id="startBtn" class="button-style">Start Game</button>
@@ -22,7 +23,7 @@
 
     <div id="videoContainer">
         <div class="video-container-div">
-            <img src="./src/assets/scroll.jpeg">
+            <img src="./src/assets/scroll.png">
         </div>
     </div>
     <script type="module" src="dist/runnerGame.js"></script>

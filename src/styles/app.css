@@ -1,7 +1,14 @@
 .body {
-    background-image: linear-gradient(to right, #87CEEB, #ffffff); /* Example: red-orange to light orange */
-    min-height: 100vh; /* Ensures the gradient covers the full viewport height */
-    margin: 0; /* Removes default body margin */
+    background-color: #87ae73;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body, button, h1 {
+    font-family: 'Nunito', sans-serif;
 }
 
 .gameContainer {
@@ -18,9 +25,9 @@
 
 .game-screen {
     border: 6px black solid;
-    border-style:ridge;
+    border-radius: 15px;
     width: 1000px;
-    height: 200px;
+    height: 350px;
     overflow: hidden;
 }
 
