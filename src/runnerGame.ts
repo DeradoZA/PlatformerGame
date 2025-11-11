@@ -5,10 +5,11 @@ import { PlayerObjectStateMachineService } from './services/playerObjectStateMac
 
 // HTML Elements
 const gameContainer = <HTMLDivElement>document.getElementById("gameContainer");
+const gameScreen = <HTMLDivElement>document.getElementById("gameScreen");
+const btnGroup = <HTMLDivElement>document.getElementById("btnGroup");
 const videoContainer = <HTMLDivElement>document.getElementById("videoContainer");
 const startButton = <HTMLButtonElement>document.getElementById("startBtn");
 const endButton = <HTMLButtonElement>document.getElementById("endBtn");
-const toggleContentButton = <HTMLButtonElement>document.getElementById("contentToggleBtn");
 const gameTrack = <HTMLCanvasElement>document.getElementById("gameTrack");
 const gameInformation = <HTMLElement>document.getElementById("gameInformation");
 
@@ -288,7 +289,8 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
             // Show next screen
             videoContainer.classList.remove('hidden-div');
 
-            gameContainer.classList.add('hidden-div');
+            gameScreen.classList.add('hidden-div');
+            btnGroup.classList.add('hidden-div');
 
             break;
         }

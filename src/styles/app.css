@@ -1,5 +1,5 @@
 .body {
-    background-color: #87ae73;
+    background-color: #F2F2E9;
     min-height: 100vh;
     margin: 0;
     display: flex;
@@ -24,11 +24,19 @@ body, button, h1 {
 }
 
 .game-screen {
-    border: 6px #8C6F5A solid;
-    border-radius: 15px;
+    background-image: url('../assets/frame.png');
     width: 1000px;
     height: 350px;
     overflow: hidden;
+    position: relative;
+}
+
+.innerContent {
+    width: 960px;
+    height: 325px;
+    position: absolute;
+    top: 12px;
+    right: 20px;
 }
 
 .game-track {

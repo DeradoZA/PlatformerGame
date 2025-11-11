@@ -10,20 +10,24 @@
 <body class="body">
     <div class="gameContainer" id="gameContainer">
         <div id="gameScreen" class="game-screen">
-            <div>
-                <h1 id="gameInformation" ></h1>
+            <div class="innerContent">
+                <div>
+                    <h1 id="gameInformation" ></h1>
+                </div>
+                <canvas id="gameTrack" class="game-track" width=1500 height=350></canvas>
             </div>
-            <canvas id="gameTrack" class="game-track" width=1500 height=350></canvas>
         </div>
-        <div>
+        <div id="btnGroup">
             <button id="startBtn" class="button-19" role="button">Start Game</button>
             <button id="endBtn" class="button-19" role="button">End Game</button>
         </div>
-    </div>
 
-    <div id="videoContainer">
-        <div class="video-container-div">
-            <img src="./src/assets/scroll.png">
+        <div id="videoContainer" class="game-screen">
+            <div class="innerContent">
+                <video width="960" height="325" controls>
+                    <source src="src/assets/TestVideo.mp4" type="video/mp4">
+                </video>
+            </div>
         </div>
     </div>
     <script type="module" src="dist/runnerGame.js"></script>
