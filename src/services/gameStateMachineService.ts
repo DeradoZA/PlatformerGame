@@ -5,9 +5,10 @@ export class GameStateMachineService implements StateMachineService<GameStateEnu
 
     allowableStateChanges: Map<GameStateEnum, GameStateEnum[]> = new Map([
         [GameStateEnum.BeginningScreen, [GameStateEnum.InGame]],
-        [GameStateEnum.FailedGame, [GameStateEnum.BeginningScreen, GameStateEnum.InGame]],
-        [GameStateEnum.GameEndedByPlayer, [GameStateEnum.BeginningScreen, GameStateEnum.InGame]],
+        [GameStateEnum.FailedGame, [GameStateEnum.BetweenAttempts, GameStateEnum.InGame]],
+        [GameStateEnum.GameEndedByPlayer, [GameStateEnum.BetweenAttempts, GameStateEnum.InGame]],
         [GameStateEnum.InGame, [GameStateEnum.FailedGame, GameStateEnum.GameEndedByPlayer, GameStateEnum.CompletedGame]],
+        [GameStateEnum.BetweenAttempts, [GameStateEnum.InGame]],
         [GameStateEnum.CompletedGame, []]
     ])
 

@@ -29,8 +29,6 @@ let jumpingGameObject : JumpingGameObject = createNewJumpingGameObject();
 gameInformation.textContent = 
 `
 Heyyyy Cuki! I've set up a small, cute challenge ahead of you ❤️
-\n Just press f to jump and play until you find me
-\n I shall be seeing you momentarily, okay love youuuuuuu
 `;
 endButton.disabled = true;
 videoContainer.classList.add('hidden-div');
@@ -213,6 +211,14 @@ function updateGameObjects() {
     })
 }
 
+function fadeText() {
+    gameInformation.classList.remove("fade-text");
+
+    void gameInformation.offsetWidth;
+
+    gameInformation.classList.add("fade-text");
+}
+
 function drawGameFrame() {
     gameTrackContext.clearRect(0, 0, GAME_TRACK_WIDTH, GAME_TRACK_HEIGHT);
 
@@ -220,7 +226,7 @@ function drawGameFrame() {
 
     gameTrackContext.moveTo(0, GROUND_HEIGHT + 45);
 
-    gameTrackContext.lineTo(GAME_TRACK_WIDTH, GROUND_HEIGHT + 45);
+    gameTrackContext.lineTo(GAME_TRACK_WIDTH - 500, GROUND_HEIGHT + 45);
 
     gameTrackContext.lineWidth = 2;
 
@@ -243,6 +249,8 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
             // Show ending text;
             gameInformation.textContent = "Oof! I implore you to give it another ago, you gots this"
 
+            fadeText();
+
             npcObjectList = [];
 
             // Update button states
@@ -258,6 +266,8 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
         {
             // Show ending text;
             gameInformation.textContent = "You ended verreh verreh early 👀 You gotta play until you find me"
+
+            fadeText();
 
             npcObjectList = [];
 

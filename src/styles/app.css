@@ -11,6 +11,28 @@ body, button, h1 {
     font-family: 'Nunito', sans-serif;
 }
 
+.fade-text {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  opacity: 0;
+  transform: translateX(-50px);
+  animation: fadeInLeft 1.5s ease forwards;
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px);
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 .gameContainer {
     display: grid;
     grid-template-columns: auto;
@@ -19,8 +41,9 @@ body, button, h1 {
     justify-content: center;
 }
 
-.gameContainer > div {
+.gameContainer {
     text-align: center;
+    align-items: center;
 }
 
 .game-screen {

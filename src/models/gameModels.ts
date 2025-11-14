@@ -25,6 +25,7 @@ export enum GameStateEnum {
     InGame,
     FailedGame,
     GameEndedByPlayer,
+    BetweenAttempts,
     CompletedGame
 }
 
