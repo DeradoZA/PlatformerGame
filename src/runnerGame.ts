@@ -31,7 +31,7 @@ let jumpingGameObject : JumpingGameObject = createNewJumpingGameObject();
 showTextSequence(
     [
         "Heyyyy Cuki! I've set up a small, frog walk inspired game for you.",
-        "All you have to do is press f to jump, your obstacles would be frogs.",
+        "All you have to do is press space bar to jump, your obstacles would be frogs.",
         "Run into me and Ballie for a little extra surprise ❤️"
     ]
 )
@@ -67,13 +67,12 @@ endButton?.addEventListener('click', () => {
 
 document.addEventListener('keydown', (event) => {
 
-    if (event.key === 'f')
+    if (event.key === " ")
     {
         const didStateChange = playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Jumping);
 
         if (didStateChange)
         {
-            playerObject.htmlElement.src = "src/assets/jumping_man.png";
             verticalVelocity = -(verticalAcceleration) * TIME_TO_APEX;
         }
     }
@@ -110,37 +109,52 @@ function runnerGameLoop() {
     }
 }
 
+function imgSize(img: HTMLImageElement, fallback = { w: 25, h: 45 }) {
+  // Try natural size first (if image loaded), then element width/height, then fallback
+  const w = img.naturalWidth || img.width || fallback.w;
+  const h = img.naturalHeight || img.height || fallback.h;
+  return { w, h };
+}
+
 function computeCollisions() {
+  if (npcObjectList.length === 0) return;
 
-    if (npcObjectList.length === 0)
-    {
-        return;
+  // ---- FORCED HITBOX SIZES FOR EVERYTHING ----
+  const PLAYER_HITBOX = { w: 50, h: 50 };
+  const NPC_HITBOX = { w: 100, h: 150 };
+  const WIN_HITBOX = { w: 100, h: 150 }; // (same size, but separate if you ever want to change)
+
+  // Player forced box
+  const playerBox: ObjectBox = {
+    xBoundaries: [playerObject.xPos, playerObject.xPos + PLAYER_HITBOX.w],
+    yBoundaries: [playerObject.yPos, playerObject.yPos + PLAYER_HITBOX.h]
+  };
+
+  for (const npc of npcObjectList) {
+
+    const hitbox = npc.isWinningObject ? WIN_HITBOX : NPC_HITBOX;
+
+    const npcBox: ObjectBox = {
+      xBoundaries: [npc.xPos, npc.xPos + hitbox.w],
+      yBoundaries: [npc.yPos, npc.yPos + hitbox.h]
+    };
+
+    // Skip if behind player
+    if (npc.xPos + hitbox.w < playerObject.xPos) continue;
+
+    const overlapX =
+      Math.max(playerBox.xBoundaries[0], npcBox.xBoundaries[0]) <=
+      Math.min(playerBox.xBoundaries[1], npcBox.xBoundaries[1]);
+
+    const overlapY =
+      Math.max(playerBox.yBoundaries[0], npcBox.yBoundaries[0]) <=
+      Math.min(playerBox.yBoundaries[1], npcBox.yBoundaries[1]);
+
+    if (overlapX && overlapY) {
+      handleObjectCollision(npc);
+      break;
     }
-
-    let closestObject = npcObjectList.reduce((prev, current) => {
-        return prev.xPos < current.xPos ? prev : current
-    })
-
-
-    let closestObjectBox : ObjectBox = {
-        xBoundaries: [closestObject.xPos, closestObject.xPos + 25],
-        yBoundaries: [closestObject.yPos, closestObject.yPos + 25]
-    }
-
-    let playerBox : ObjectBox = {
-        xBoundaries: [playerObject.xPos, playerObject.xPos + 25],
-        yBoundaries: [playerObject.yPos, playerObject.yPos + 25]
-    }
-
-    if (Math.max(closestObjectBox.xBoundaries[0], playerBox.xBoundaries[0])
-        <= Math.min(closestObjectBox.xBoundaries[1], playerBox.xBoundaries[1]))
-    {
-        if (Math.max(closestObjectBox.yBoundaries[0], playerBox.yBoundaries[0])
-            <= Math.min(closestObjectBox.yBoundaries[1], playerBox.yBoundaries[1]))
-        {
-            handleObjectCollision(closestObject);
-        }
-    }
+  }
 }
 
 function handleObjectCollision(closestObject: NpcObject) {
@@ -167,23 +181,22 @@ function executeJump() {
     verticalVelocity += verticalAcceleration * secondsPerFrame;
     playerObject.yPos += verticalVelocity * secondsPerFrame;
 
-    if (playerObject.yPos >= GROUND_HEIGHT)
+    if (playerObject.yPos >= GROUND_HEIGHT - 105)
     {
-        playerObject.yPos = GROUND_HEIGHT;
-        playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Idle)
-        playerObject.htmlElement.src = "src/assets/running_man.png";
+        playerObject.yPos = GROUND_HEIGHT - 105;
+        playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Idle);
     }
 }
 
 function createObject() {
     const object = document.createElement("img");
-    object.src = "src/assets/cactus.png";
+    object.src = "src/assets/angryfrog.png";
 
     npcObjectList.push(
         {
             htmlElement: object,
             xPos: GAME_TRACK_WIDTH - 200,
-            yPos: GROUND_HEIGHT,
+            yPos: GROUND_HEIGHT - 105,
             isWinningObject: false
         }
     )
@@ -191,24 +204,24 @@ function createObject() {
 
 function createPlayerObject() : PlayerObject {
     const object = document.createElement("img");
-    object.src = "src/assets/running_man.png";
+    object.src = "src/assets/Milla.png";
 
     return {
         htmlElement: object,
         xPos: 100,
-        yPos: GROUND_HEIGHT,
+        yPos: GROUND_HEIGHT - 105,
         state: PlayerStateEnum.Idle
     }
 }
 
 function createWinningObject()  {
     const object = document.createElement("img");
-    object.src = "src/assets/panda-bear.png";
+    object.src = "src/assets/DanBallie.png";
 
     const winningNpcObject = {
         htmlElement: object,
         xPos: GAME_TRACK_WIDTH - 200,
-        yPos: GROUND_HEIGHT,
+        yPos: GROUND_HEIGHT - 155,
         isWinningObject: true
     }
 
@@ -225,7 +238,7 @@ function createNewJumpingGameObject() : JumpingGameObject {
 
 function updateGameObjects() {
     npcObjectList.forEach(object => {
-        object.xPos -= 10;
+        object.xPos -= 6;
     })
 }
 
