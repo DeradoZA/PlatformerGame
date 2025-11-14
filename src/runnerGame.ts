@@ -10,6 +10,7 @@ const btnGroup = <HTMLDivElement>document.getElementById("btnGroup");
 const videoContainer = <HTMLDivElement>document.getElementById("videoContainer");
 const startButton = <HTMLButtonElement>document.getElementById("startBtn");
 const endButton = <HTMLButtonElement>document.getElementById("endBtn");
+const restartBtn = <HTMLButtonElement>document.getElementById("restartBtn");
 const gameTrack = <HTMLCanvasElement>document.getElementById("gameTrack");
 const gameInformation = <HTMLElement>document.getElementById("gameInformation");
 
@@ -35,10 +36,22 @@ showTextSequence(
     ]
 )
 
+restartBtn.classList.add('hidden');
+endButton.classList.add('hidden');
 endButton.disabled = true;
-videoContainer.classList.add('hidden-div');
+
+
+videoContainer.classList.add('hidden');
 
 startButton?.addEventListener('click', () => {
+    jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.InGame);
+
+    playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Idle);
+
+    performGameStateChangeActions(jumpingGameObject.state);
+})
+
+restartBtn?.addEventListener('click', () => {
     jumpingGameObjectStateMachineService.tryPerformStateChange(jumpingGameObject, GameStateEnum.InGame);
 
     playerObjectStateMachineService.tryPerformStateChange(playerObject, PlayerStateEnum.Idle);
@@ -271,6 +284,11 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
             // Update button states
             startButton.disabled = false;
             endButton.disabled = true;
+            restartBtn.disabled = false;
+
+            restartBtn.classList.remove("hidden");
+            startButton.classList.add("hidden");
+            endButton.classList.add("hidden");
 
             // Reset game frame counter
             gameFrame = 0;
@@ -287,6 +305,11 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
             // Update button states
             startButton.disabled = false;
             endButton.disabled = true;
+            restartBtn.disabled = false;
+
+            restartBtn.classList.remove("hidden");
+            startButton.classList.add("hidden");
+            endButton.classList.add("hidden");
 
             // Reset game frame counter
             gameFrame = 0;
@@ -299,8 +322,14 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
 
             gameFrame = 0;
 
+            // Update button states
             startButton.disabled = true;
             endButton.disabled = false;
+            restartBtn.disabled = true;
+
+            startButton.classList.add("hidden");
+            restartBtn.classList.add("hidden");
+            endButton.classList.remove("hidden");
 
             gameInformation.textContent = "";
 
@@ -310,10 +339,10 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
         }
         case GameStateEnum.CompletedGame: {
             // Show next screen
-            videoContainer.classList.remove('hidden-div');
+            videoContainer.classList.remove('hidden');
 
-            gameScreen.classList.add('hidden-div');
-            btnGroup.classList.add('hidden-div');
+            gameScreen.classList.add('hidden');
+            btnGroup.classList.add('hidden');
 
             break;
         }

@@ -79,8 +79,8 @@ body, button, h1 {
     height: 100%;
 }
 
-.hidden-div {
-    display: none;
+.hidden {
+    display: none !important;
 }
 
 .video-container-div {
