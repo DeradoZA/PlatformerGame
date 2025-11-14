@@ -26,10 +26,15 @@ let playerObject : PlayerObject = createPlayerObject();
 let jumpingGameObject : JumpingGameObject = createNewJumpingGameObject();
 
 // Initial Game Setup
-gameInformation.textContent = 
-`
-Heyyyy Cuki! I've set up a small, cute challenge ahead of you ❤️
-`;
+
+showTextSequence(
+    [
+        "Heyyyy Cuki! I've set up a small, frog walk inspired game for you.",
+        "All you have to do is press f to jump, your obstacles would be frogs.",
+        "Run into me and Ballie for a little extra surprise ❤️"
+    ]
+)
+
 endButton.disabled = true;
 videoContainer.classList.add('hidden-div');
 
@@ -211,12 +216,24 @@ function updateGameObjects() {
     })
 }
 
-function fadeText() {
+async function fadeText() : Promise<void> {
     gameInformation.classList.remove("fade-text");
 
     void gameInformation.offsetWidth;
 
     gameInformation.classList.add("fade-text");
+
+    return await new Promise(res => setTimeout(res, 4000))
+}
+
+async function showTextSequence(textSequence: string[])
+{
+    for (const text of textSequence)
+    {
+        gameInformation.textContent = text;
+
+        await fadeText();
+    }
 }
 
 function drawGameFrame() {
@@ -247,9 +264,7 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
         case GameStateEnum.FailedGame:
         {
             // Show ending text;
-            gameInformation.textContent = "Oof! I implore you to give it another ago, you gots this"
-
-            fadeText();
+            showTextSequence(["The frog probably does pass the vibe check, \n press Restart Game to run more vibe checks"]);
 
             npcObjectList = [];
 
@@ -265,9 +280,7 @@ function performGameStateChangeActions(newGameState: GameStateEnum) {
         case GameStateEnum.GameEndedByPlayer:
         {
             // Show ending text;
-            gameInformation.textContent = "You ended verreh verreh early 👀 You gotta play until you find me"
-
-            fadeText();
+            showTextSequence(["Just press on Restart Game when you want to continue playing 😎"]);
 
             npcObjectList = [];
 
