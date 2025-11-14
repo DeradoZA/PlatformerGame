@@ -275,6 +275,8 @@ function drawGameFrame() {
 
     gameTrackContext.stroke();
 
+    //Test
+
     gameTrackContext.drawImage(<CanvasImageSource>playerObject.htmlElement, playerObject.xPos, playerObject.yPos)
 
     npcObjectList = npcObjectList.filter(npcObject => npcObject.xPos > 0);
