@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="src/styles/app.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+    <title>Dino Game</title>
+</head>
+<body class="body">
+    <div class="gameContainer" id="gameContainer">
+        <h1 id="gameInformation"class="fade-text"></h1>     
+
+        <div id="gameScreen" class="game-screen">
+            <div class="innerContent">
+                <canvas id="gameTrack" class="game-track" width=1500 height=350></canvas>
+            </div>
+        </div>
+        <div id="btnGroup">
+            <button id="startBtn" class="button-19" role="button">Start Game</button>
+            <button id="endBtn" class="button-19" role="button">End Game</button>
+            <button id="restartBtn" class="button-19" role="button">Restart Game</button>
+        </div>
+
+        <div id="videoContainer" class="game-screen">
+            <div class="innerContent">
+                <video width="960" height="325" controls>
+                    <source src="src/assets/DanAnniversary.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="dist/runnerGame.js"></script>
+</body>
+</html>
